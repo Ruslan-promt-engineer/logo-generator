@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор Логотипов - YandexART</title>
+    <meta name="description" content="Создайте уникальный логотип для вашей компании с помощью искусственного интеллекта">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Favicon (опционально) -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🎨 Генератор Логотипов</h1>
+            <p class="subtitle">Создайте уникальный логотип для вашей компании с помощью ИИ</p>
+        </header>
+
+        <main>
+            <!-- Telegram Promo Banner -->
+            <div class="telegram-promo">
+                <div class="telegram-content">
+                    <div class="telegram-icon">🤖</div>
+                    <div class="telegram-text">
+                        <strong>Предпочитаете Телеграм?</strong>
+                        <p>Генерируйте логотипы прямо в мессенджере — быстро и удобно</p>
+                    </div>
+                    <a href="https://t.me/GenLogo111_bot" target="_blank" rel="noopener noreferrer" class="btn-telegram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                        </svg>
+                        Открыть бота
+                    </a>
+                </div>
+            </div>
+
+            <!-- Форма генерации -->
+            <div class="generator-section" id="generatorSection">
+                <div class="form-group">
+                    <label for="companyName">Название компании *</label>
+                    <input
+                        type="text"
+                        id="companyName"
+                        placeholder="Введите название вашей фирмы"
+                        required
+                        maxlength="100"
+                        autocomplete="off"
+                    >
+                    <small class="form-hint">Максимум 100 символов</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="styleSelect">Выберите стиль логотипа</label>
+                    <select id="styleSelect">
+                        <option value="">-- Без стиля --</option>
+                        {% for key, description in styles.items() %}
+                        <option value="{{ key }}">{{ description }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-hint">Можно выбрать позже или пропустить</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="customPrompt">Дополнительные пожелания (опционально)</label>
+                    <textarea
+                        id="customPrompt"
+                        rows="4"
+                        placeholder="Опишите дополнительные детали: цвета, элементы, настроение..."
+                        maxlength="500"
+                    ></textarea>
+                    <small class="form-hint">Максимум 500 символов. Используйте Ctrl+Enter для отправки</small>
+                </div>
+
+                <button id="generateBtn" class="btn btn-primary">
+                    <span class="btn-text">Сгенерировать логотип</span>
+                    <span class="loader" style="display: none;"></span>
+                </button>
+
+                <!-- Подсказки -->
+                <div class="tips-section">
+                    <h4>💡 Советы для лучшего результата:</h4>
+                    <ul>
+                        <li>Используйте краткое и понятное название компании</li>
+                        <li>Выберите стиль, который соответствует вашему бренду</li>
+                        <li>Добавьте детали: цвета, символы, настроение</li>
+                        <li>После генерации можно доработать логотип</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Результат -->
+            <div class="result-section" id="resultSection" style="display: none;">
+                <h2>✨ Ваш логотип готов!</h2>
+
+                <div class="image-container">
+                    <img id="resultImage" src="" alt="Сгенерированный логотип">
+                    <div class="image-actions">
+                        <button id="downloadBtn" class="btn-action" title="Скачать">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                            </svg>
+                        </button>
+                        <button id="shareBtn" class="btn-action" title="Поделиться">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                                <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="prompt-display">
+                    <strong>📝 Использованный промпт:</strong>
+                    <p id="usedPrompt"></p>
+                </div>
+
+                <!-- Секция доработки -->
+                <div class="refinement-section">
+                    <h3>🔧 Хотите дополнить логотип?</h3>
+                    <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">
+                        💡 Дополнение сохранит базовую структуру логотипа и добавит ваши изменения
+                    </p>
+                    <div class="form-group">
+                        <textarea
+                            id="refinementPrompt"
+                            rows="3"
+                            placeholder="Опишите, что нужно изменить (например: 'сделай цвета ярче', 'добавь круглую рамку', 'упрости форму')"
+                            maxlength="300"
+                        ></textarea>
+                        <small class="form-hint">Максимум 300 символов. Используйте Ctrl+Enter для отправки</small>
+                    </div>
+                    <button id="refineBtn" class="btn btn-secondary">
+                        <span class="btn-text">Дополнить логотип</span>
+                        <span class="loader" style="display: none;"></span>
+                    </button>
+                </div>
+
+                <div class="result-actions">
+                    <button id="newLogoBtn" class="btn btn-outline">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                        Создать новый логотип
+                    </button>
+                </div>
+            </div>
+
+            <!-- Сообщения об ошибках -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <!-- Уведомление об успехе -->
+            <div id="successMessage" class="success-message" style="display: none;">
+                ✅ Действие успешно выполнено!
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <p>Powered by <strong>Yandex Art API</strong></p>
+                <div class="footer-links">
+                    <a href="https://t.me/GenLogo111_bot" target="_blank" rel="noopener noreferrer">
+                        🤖 Telegram-бот
+                    </a>
+                    <span class="separator">•</span>
+                    <a href="#" id="contactLink">📧 Контакты</a>
+                </div>
+                <p class="copyright">© 2026 Генератор Логотипов. Все права защищены.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
