@@ -167,4 +167,5 @@ Fork репозитория
 📬 Контакты
 Автор: Ruslan-promt-engineer
 GitHub: github.com/Ruslan-promt-engineer
+https://t.me/Rus_Neo81
 
